@@ -74,7 +74,7 @@ export class LinearAlgebra {
             } 
         }
         else {
-            for (m = 0; m < a.length; m++) {            // m x n   n x p   m x p
+            for (m = 0; m < a.length; m++) {
                 matrizTimes[m] = [];
                 for (p = 0; p < b[0].length; p++) {
                     for (i = 0; i < b.length; i++) {
