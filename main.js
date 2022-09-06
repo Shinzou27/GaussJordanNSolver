@@ -87,72 +87,121 @@ export class LinearAlgebra {
         }
         return matrizTimes;
     }
+    dot(a, b) {
+        soma = 0;
+        matrizDot = [];                               //   a   *   b   =   X
+        for (m = 0; m < a.length; m++) {                // m x n   n x p   m x p
+            matrizDot[m] = [];
+            for (p = 0; p < b[0].length; p++) {
+                for (i = 0; i < b.length; i++) {
+                    soma += a[m][i] * b[i][p]; 
+                }
+                matrizDot[m][p] = soma;
+                soma = 0;
+            }
+        }
+        return matrizDot;        
+    }
 
-
-    /* EXEMPLO: [1, 3, 5, 3] ----> L1
-                [3, 1, 3, 2] ----> L2
-                [2, 0, 5, 4] ----> L3
-        Primeiro: L2 = L2 - 3L1             k = a21/a11
-        --------------------------
-
-                [1,  3,   5,  3] ----> L1
-                [0, -8, -12, -7] ----> L2
-                [2,  0,   5,  4] ----> L3
-        Segundo: L3 = L3 - 2L1              k = a31/a11
-        --------------------------
-
-                [1,  3,   5,  3] ----> L1
-                [0, -8, -12, -7] ----> L2
-                [0, -6,  -5, -2] ----> L3
-        Terceiro: L3 = L3 - 3L2/4           k = a32/a22
-        --------------------------
-
-                [1,  3,   5,    3] ----> L1
-                [0, -8, -12,   -7] ----> L2
-                [0,  0,   4, 3.25] ----> L3        
-    */
-   
     gauss(a) {
-        //PASSO 1: ELIMINAÇÃO DOS NÚMEROS ABAIXO DOS PIVÔS:
-        pivoLinha1 = a[0][0];
+        for (i = 0; i < (a.length - 1); i++) {
+            pivo = a[i][i];
+            for (j = i+1; j < a.length; j++) {
+                 k = -1*a[j][i]/pivo;
+                 for (l = 0; l < a[i].length; l++) {
+                     a[j][l] += k*a[i][l];
+                 }
+             }
+         }
+         return a;
+     }
 
+    solver(a) {
+        for (i = a.length-1; i >= 0; i--) {
+            pivo = a[i][i];
+            for (j = i; j < a[i].length; j++) {
+                a[i][j] = a[i][j]/pivo;
+            }
+        }   
+        
+        for (i = a.length - 1; i > 0; i--) {
+            pivo = a[i][i];
+            for (j = i-1; j >= 0; j--) {
+                k = -a[j][i]/pivo;
+                for (l = 0; l < a[i].length; l++) {
+                    a[j][l] += k*a[i][l];
+                }
+            }
+        }
+        return a;
+    }
+
+    /*
+    EXEMPLO:[1, 3, 5, 3] ----> L1
+            [3, 1, 3, 2] ----> L2
+            [2, 0, 5, 4] ----> L3
+
+    Primeiro: L2 = L2 - 3L1             k = a21/a11
+    --------------------------
+
+            [1,  3,   5,  3] ----> L1
+            [0, -8, -12, -7] ----> L2
+            [2,  0,   5,  4] ----> L3
+    Segundo: L3 = L3 - 2L1              k = a31/a11
+    --------------------------
+
+            [1,  3,   5,  3] ----> L1
+            [0, -8, -12, -7] ----> L2
+            [0, -6,  -5, -2] ----> L3
+    Terceiro: L3 = L3 - 3L2/4           k = a32/a22
+    --------------------------
+
+            [1,  3,   5,    3] ----> L1
+            [0, -8, -12,   -7] ----> L2
+            [0,  0,   4, 3.25] ----> L3        
+    ==================================================
+    > PASSO 1: ELIMINAÇÃO DOS NÚMEROS ABAIXO DOS PIVÔS:
+        pivoLinha1 = a[0][0];
+        
         k = a[1][0]/pivoLinha1;
         for (i = 0; i < a[1].length; i++) {
             a[1][i] = a[1][i] - k*a[0][i];
         }
-
+        
         k = a[2][0]/pivoLinha1;
         for (i = 0; i < a[1].length; i++) {
             a[2][i] = a[2][i] - k*a[0][i];
         }
-
+        
         pivoLinha2 = a[1][1];
-
+        
         k = a[2][1]/pivoLinha2;
         for (i = 0; i < a[1].length; i++) {
             a[2][i] = a[2][i] - k*a[1][i];
         }
-        //=================================================
+    Esse passo engloba a resolução do método gauss(a), retornando a matriz triangular superior em forma escada.
 
-        //PASSO 2: REDUÇÃO DOS VALORES DOS PIVÔS PARA 1:
+    ==================================================
+    > PASSO 2: REDUÇÃO DOS VALORES DOS PIVÔS PARA 1:
+
         pivoLinha3 = a[2][2];
         for (i = 2; i < a[2].length; i++) {
-            div = a[2][i]/pivoLinha3;
-            a[2][i] = div;
+            a[2][i] = a[2][i]/pivoLinha3;
         }
         
         pivoLinha2 = a[1][1];
         for (i = 1; i < a[1].length; i++) {
             a[1][i] = a[1][i]/pivoLinha2
         }
-
+        
         pivoLinha1 = a[0][0];
         for (i = 0; i < a[0].length; i++) {
             a[0][i] = a[0][i]/pivoLinha1;
         }
-        //=================================================
+        
+    ==================================================
+    > PASSO 3: ELIMINAÇÃO DOS NÚMEROS ACIMA DOS PIVÔS:
 
-        //PASSO 3: ELIMINAÇÃO DOS NÚMEROS ACIMA DOS PIVÔS:
         k = a[1][2]/a[2][2];
         for (i = 0; i < a[1].length; i++) {
             a[1][i] = a[1][i] - k*a[2][i];
@@ -162,12 +211,13 @@ export class LinearAlgebra {
         for (i = 0; i < a[1].length; i++) {
             a[0][i] = a[0][i] - k*a[2][i];
         }
-
+        
         k = a[0][1]/a[1][1];
         for (i = 0; i < a[1].length; i++) {
             a[0][i] = a[0][i] - k*a[1][i];
         }
-        return a;
-    }
+    O passo 2 e o passo 3 englobam o método solver(a), retornando a solução do sistema linear.
+    */
+    
 }
 
