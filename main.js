@@ -12,7 +12,11 @@ export class Matrix {
     cols;
     elements;
 
-    constructor(rows, cols, elements) {}
+    constructor(rows, cols, elements) {
+        this.rows = rows;
+        this.cols = cols;
+        this.elements = elements;
+    }
 
     get(i, j) {
         return this.elements[i][j];
@@ -21,13 +25,26 @@ export class Matrix {
     set(i, j, value) {
         this.elements[i][j] = value;
     }
+    arranjarMatriz() {
+        var matriz = [];
+        for (var i = 0; i < this.rows; i++) {
+            matriz[i] = [];
+            for (var j = 0; j < this.cols; j++) {
+                matriz[i][j] = this.elements.shift();
+            }
+        }
+        return matriz;
+    }
 }
 
 export class Vector {
     dim;
     elements;
 
-    constructor(dim, elements) {}
+    constructor(dim, elements) {
+        this.dim = dim;
+        this.elements = elements;
+    }
 
     get(i) {
         return this.elements[i];
@@ -36,6 +53,13 @@ export class Vector {
     set(i, value) {
         this.elements[i] = value;
     }
+    transformarEmArray() {
+        var vetor = [];
+        for (var i = 0; i < this.dim; i++) {
+            vetor[i] = this.elements.shift();
+        }
+        return vetor;
+    }    
 }
 
 export class LinearAlgebra {
@@ -104,6 +128,7 @@ export class LinearAlgebra {
     }
 
     gauss(a) {
+        this.permutarLinhas(a);
         for (i = 0; i < (a.length - 1); i++) {
             pivo = a[i][i];
             for (j = i+1; j < a.length; j++) {
@@ -117,6 +142,7 @@ export class LinearAlgebra {
      }
 
     solver(a) {
+        this.gauss(a);
         for (i = a.length-1; i >= 0; i--) {
             pivo = a[i][i];
             for (j = i; j < a[i].length; j++) {
@@ -131,6 +157,19 @@ export class LinearAlgebra {
                 for (l = 0; l < a[i].length; l++) {
                     a[j][l] += k*a[i][l];
                 }
+            }
+        }           
+        return a;
+    }
+
+    permutarLinhas(a) {
+        var aux = [];
+        for (i = 0; i < (a.length - 1); i++) {
+            pivo = a[i][i];
+            if (a[i][i] == 0) {
+                aux = a[i];
+                a[i] = a[i+1];
+                a[i+1] = aux;
             }
         }
         return a;
