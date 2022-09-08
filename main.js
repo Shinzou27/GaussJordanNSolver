@@ -5,9 +5,15 @@
                 Gabriela Araujo de Abreu
                 Victor Nunes Saboia
 */
+/*
+Ainda resta:
+    1 - Fazer o solver retornar uma matriz coluna com os resultados da operação;
+    2 - Criar os métodos de entrada de dados (prompt? Entrada fixa?);
+    3 - Fazer mensagens personalizadas para saída de dados;
+    4 - Fazer uma interface em HTML para não usar o console do Chrome;
+*/
 
-
-export class Matrix {
+class Matrix {
     rows;
     cols;
     elements;
@@ -37,7 +43,7 @@ export class Matrix {
     }
 }
 
-export class Vector {
+class Vector {
     dim;
     elements;
 
@@ -62,13 +68,13 @@ export class Vector {
     }    
 }
 
-export class LinearAlgebra {
+class LinearAlgebra {
 
     transpose(a) {
-        matrizTransposta = [];
-        for (m = 0; m < a[0].length; m++) {
+        var matrizTransposta = [];
+        for (var m = 0; m < a[0].length; m++) {
             matrizTransposta[m] = [];
-            for (n = 0; n < a.length; n++) {
+            for (var n = 0; n < a.length; n++) {
                 matrizTransposta[m][n] = a[n][m];
             }
         }
@@ -76,10 +82,10 @@ export class LinearAlgebra {
     }
 
     sum(a, b) {
-        matrizSoma = [];
-        for (m = 0; m < a.length; m++) {
+        var matrizSoma = [];
+        for (var m = 0; m < a.length; m++) {
             matrizSoma[m] = [];
-            for (n = 0; n < a[0].length; n++) {
+            for (var n = 0; n < a[0].length; n++) {
                 matrizSoma[m][n] = a[m][n] + b[m][n];
             }
         }
@@ -87,21 +93,21 @@ export class LinearAlgebra {
     }
 
     times(a, b) {
-        soma = 0;
-        matrizTimes = [];                               //   a   *   b   =   X
+        var soma = 0;
+        var matrizTimes = [];                               //   a   *   b   =   X
         if (!isNaN(a)){
-            for (n = 0; n < b.length; n++) {            // m x n   n x p   m x p
+            for (var n = 0; n < b.length; n++) {            // m x n   n x p   m x p
                 matrizTimes[n] = [];
-                for (p = 0; p < b[0].length; p++) {
+                for (var p = 0; p < b[0].length; p++) {
                     matrizTimes[n][p] = b[n][p] * a;
                 }
             } 
         }
         else {
-            for (m = 0; m < a.length; m++) {
+            for (var m = 0; m < a.length; m++) {
                 matrizTimes[m] = [];
-                for (p = 0; p < b[0].length; p++) {
-                    for (i = 0; i < b.length; i++) {
+                for (var p = 0; p < b[0].length; p++) {
+                    for (var i = 0; i < b.length; i++) {
                         soma += a[m][i] * b[i][p]; 
                     }
                     matrizTimes[m][p] = soma;
@@ -112,12 +118,12 @@ export class LinearAlgebra {
         return matrizTimes;
     }
     dot(a, b) {
-        soma = 0;
-        matrizDot = [];                               //   a   *   b   =   X
-        for (m = 0; m < a.length; m++) {                // m x n   n x p   m x p
+        var soma = 0;
+        var matrizDot = [];                               //   a   *   b   =   X
+        for (var m = 0; m < a.length; m++) {                // m x n   n x p   m x p
             matrizDot[m] = [];
-            for (p = 0; p < b[0].length; p++) {
-                for (i = 0; i < b.length; i++) {
+            for (var p = 0; p < b[0].length; p++) {
+                for (var i = 0; i < b.length; i++) {
                     soma += a[m][i] * b[i][p]; 
                 }
                 matrizDot[m][p] = soma;
@@ -129,11 +135,11 @@ export class LinearAlgebra {
 
     gauss(a) {
         this.permutarLinhas(a);
-        for (i = 0; i < (a.length - 1); i++) {
-            pivo = a[i][i];
-            for (j = i+1; j < a.length; j++) {
-                 k = -1*a[j][i]/pivo;
-                 for (l = 0; l < a[i].length; l++) {
+        for (var i = 0; i < (a.length - 1); i++) {
+            var pivo = a[i][i];
+            for (var j = i+1; j < a.length; j++) {
+                 var k = -1*a[j][i]/pivo;
+                 for (var l = 0; l < a[i].length; l++) {
                      a[j][l] += k*a[i][l];
                  }
              }
@@ -143,18 +149,18 @@ export class LinearAlgebra {
 
     solver(a) {
         this.gauss(a);
-        for (i = a.length-1; i >= 0; i--) {
-            pivo = a[i][i];
+        for (var i = a.length-1; i >= 0; i--) {
+            var pivo = a[i][i];
             for (j = i; j < a[i].length; j++) {
                 a[i][j] = a[i][j]/pivo;
             }
         }   
         
-        for (i = a.length - 1; i > 0; i--) {
-            pivo = a[i][i];
-            for (j = i-1; j >= 0; j--) {
-                k = -a[j][i]/pivo;
-                for (l = 0; l < a[i].length; l++) {
+        for (var i = a.length - 1; i > 0; i--) {
+            var pivo = a[i][i];
+            for (var j = i-1; j >= 0; j--) {
+                var k = -a[j][i]/pivo;
+                for (var l = 0; l < a[i].length; l++) {
                     a[j][l] += k*a[i][l];
                 }
             }
@@ -164,8 +170,8 @@ export class LinearAlgebra {
 
     permutarLinhas(a) {
         var aux = [];
-        for (i = 0; i < (a.length - 1); i++) {
-            pivo = a[i][i];
+        for (var i = 0; i < (a.length - 1); i++) {
+            var pivo = a[i][i];
             if (a[i][i] == 0) {
                 aux = a[i];
                 a[i] = a[i+1];
@@ -174,7 +180,7 @@ export class LinearAlgebra {
         }
         return a;
     }
-
+}
     /*
     EXEMPLO:[1, 3, 5, 3] ----> L1
             [3, 1, 3, 2] ----> L2
@@ -257,6 +263,4 @@ export class LinearAlgebra {
         }
     O passo 2 e o passo 3 englobam o método solver(a), retornando a solução do sistema linear.
     */
-    
-}
 
